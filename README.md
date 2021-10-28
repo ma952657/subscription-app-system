@@ -117,27 +117,6 @@ ActiveMQ is lighter weight to configure than Kafka.
 
 MongoDB is lightweight to configure and a flat indexed document data store gives faster access.
 
-## CI/CD proposal
-
-A CI/CD pipeline for a project of this type should look something like this for each step in the pipeline:
-
-**Test**
-- Run all unit tests
-- Lint code against a checkstyle predefined in the team
-> If any of the above steps do not succeed, fail build
-- Check code coverage and mark the code as healthy or unhealthy
-
-**Build**
-- Build docker images and tag versions
-
-**Integration tests**
-- Run contract testing
-- Run integration testing in an environment as close as possible to production
-> If any of the above steps do no succeed, fail build
-
-**Deploy**
-- Deploy to production with a possibility of a rollback to previous version if something goes wrong
-
 
 ## Improvements:
 
