@@ -1,0 +1,93 @@
+version: "3.7"
+
+services:
+
+  mongo-database:
+    image: mongo
+    container_name: mongo-database
+    ports:
+      - "27017:27017"
+    networks:
+      - private-network
+    volumes:
+      - data-volume:/data/db
+    command: ["mongod"]
+
+  subscribe-service:
+    image: subscribe-service:latest
+    container_name: subscribe-service
+    build:
+      context: ./subscribe-service
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8080"
+    networks:
+      - private-network
+    depends_on:
+      - mongo-database
+    environment:
+      - SPRING_DATA_MONGODB_.HOST=mongo-database
+
+  subscribe-topic:
+    image: subscribe-topic:latest
+    container_name: subscribe-topic
+    build:
+      context: ./subscribe-topic
+      dockerfile: Dockerfile
+    ports:
+      - "9001:8080"
+    networks:
+      - private-network
+    depends_on:
+      - active-mq-broker
+
+  email-service:
+    image: email-service:latest
+    container_name: email-service
+    build:
+      context: ./email-service
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8080"
+    networks:
+      - private-network
+    depends_on:
+      - active-mq-broker
+
+
+  public-service:
+    image: public-service:latest
+    build:
+      context: ./public-service
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SUBSCRIBE_API_ADDR= subscribe-service:8081
+    networks:
+      - public-network
+      - private-network
+
+  active-mq-broker:
+    image: vromero/activemq-artemis:latest-alpine
+    container_name: activemq
+    environment:
+      ARTEMIS_USERNAME: mahesh
+      ARTEMIS_PASSWORD: password
+    ports:
+      - 8161:8161
+      - 61616:61616
+    networks:
+      - private-network
+
+
+volumes:
+  data-volume:
+networks:
+  public-network:
+  private-network:
+
+
+
+
+

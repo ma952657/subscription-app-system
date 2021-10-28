@@ -1,0 +1,63 @@
+openapi: 3.0.1
+info:
+  title: Subscribe Service
+  description: 'Subscription Service to handle persistence and trigger subscription workflows'
+  version: 0.0.1
+tags:
+  - name: Subscribe
+    description: Subscription operations
+paths:
+  /subscribe:
+    post:
+      tags:
+        - Subscribe
+      description: 'Subscribe to a news letter'
+      operationId: subscribe
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Subscription'
+      responses:
+        200:
+          description: Subscribed successfully
+          content:
+            application/json:
+              schema:
+                type: string
+
+components:
+  schemas:
+    Subscription:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Contact information for the subscriber
+        firstname:
+          type: string
+          description: Name of the subscriber
+        gender:
+          type: string
+          enum:
+            - Male
+            - Female
+          readOnly: true
+          description: Subscriber gender
+        date_of_birth:
+          type: string
+          format: date
+          readOnly: true
+          description: Subscriber date of birth
+        has_consent:
+          type: boolean
+          description: Flags that the subscriber consents to contact
+        newsletter_id:
+          type: string
+          description: Identifier for the newsletter to subscribe to
+      required:
+        - email
+        - date_of_birth
+        - has_consent
+        - newsletter_id

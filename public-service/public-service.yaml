@@ -1,0 +1,144 @@
+openapi: 3.0.0
+info:
+  title: Subscription Public Service
+  description: 'Subscription Public Service API to act as  to Subscription services and workflows'
+  version: 0.0.1
+tags:
+  - name: Subscribe
+    description: Subscription operations
+paths:
+  /subscribe/:
+    post:
+      tags:
+        - Subscribe
+      description: 'Subscribe to a news letter'
+      operationId: subscribe
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Subscription'
+      responses:
+        200:
+          description: Subscribed successfully
+          content:
+            application/json:
+              schema:
+                type: string
+
+  /subscribe/{id}:
+    get:
+      tags:
+        - Subscribe
+      description: 'Get details of a Subscription'
+      operationId: getSubscription
+      parameters:
+        - name: id
+          in: path
+          description: 'The subscription id'
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Details of a Subscriprtion
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionDTO'
+
+  /subscribe/getAll:
+    get:
+      tags:
+        - Subscribe
+      description: 'All Subscription Details'
+      operationId: getAllSubscriptions
+      responses:
+        200:
+          description: All Subscriptions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SubscriptionDTO'
+
+  /subscribe/{subsid}:
+    delete:
+      tags:
+        - Subscribe
+      description: 'Delete Subscription by Subscription'
+      operationId: deleteSubscription
+      parameters:
+        - name: subsid
+          in: path
+          description: 'The subscription id'
+          required: true
+          schema:
+            type: string
+      responses:
+        204:
+          description: Subscription Deleted
+
+
+components:
+  schemas:
+    Subscription:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Contact information for the subscriber
+        firstname:
+          type: string
+          description: Name of the subscriber
+        gender:
+          type: string
+          enum:
+            - Male
+            - Female
+          readOnly: true
+          description: Subscriber gender
+        date_of_birth:
+          type: string
+          format: date
+          readOnly: true
+          description: Subscriber date of birth
+        has_consent:
+          type: boolean
+          description: Flags that the subscriber consents to contact
+        newsletter_id:
+          type: string
+          description: Identifier for the newsletter to subscribe to
+      required:
+        - email
+        - date_of_birth
+        - has_consent
+        - newsletter_id
+
+    SubscriptionDTO:
+      type: object
+      properties:
+        subsId:
+          type: string
+          description: Subscription Id
+        email:
+          type: string
+          description: Contact information for the subscriber
+        firstname:
+          type: string
+          description: Name of the subscriber
+        gender:
+          type: string
+          description: Subscriber gender
+        date_of_birth:
+          type: string
+          format: date
+          description: Subscriber date of birth
+        has_consent:
+          type: boolean
+          description: Flags that the subscriber consents to contact
+        newsletter_id:
+          type: string
+          description: Identifier for the newsletter to subscribe to

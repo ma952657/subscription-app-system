@@ -1,0 +1,63 @@
+openapi: 3.0.0
+info:
+  title: Subscribe Topic
+  description: 'Subscription Service to handle publishing to ActiveMQ DLQ'
+  version: 1.0.0
+tags:
+  - name: Subscribe
+    description: Subscription operations
+paths:
+  /activeMQ/publish:
+    post:
+      tags:
+        - Subscribe
+      description: 'Subscribe to a news letter'
+      operationId: subscribe
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Subscription'
+      responses:
+        200:
+          description: Subscribed successfully
+
+components:
+  schemas:
+    Subscription:
+      type: object
+      properties:
+        id:
+          type: string
+          description: hex id given to the subscription through persistence
+        email:
+          type: string
+          description: Contact information for the subscriber
+        firstname:
+          type: string
+          description: Name of the subscriber
+        gender:
+          type: string
+          enum:
+            - Male
+            - Female
+          readOnly: true
+          description: Subscriber gender
+        date_of_birth:
+          type: string
+          format: date
+          readOnly: true
+          description: Subscriber date of birth
+        has_consent:
+          type: boolean
+          description: Flags that the subscriber consents to contact
+        newsletter_id:
+          type: string
+          description: Identifier for the newsletter to subscribe to
+      required:
+        - id
+        - email
+        - date_of_birth
+        - has_consent
+        - newsletter_id
